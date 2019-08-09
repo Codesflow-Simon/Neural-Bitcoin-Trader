@@ -1,0 +1,26 @@
+{
+    "data": {
+        "interval": "30m",
+        "symbol": "BTCUSDT",
+        "start": "2019-08-08 00:00",
+        "limit": 1000,
+        "iterations": 1000,
+        "sleep": 5
+    },
+    "train": {
+        "model_path": "models/model.h5",
+        "restart": false,
+        "verbose": 2,
+        "graph": false,
+        "iters": 1,
+        "sleep": 5,
+
+        "epoch": 1,
+        "train_end": null,
+        "test_length": 5000,
+        "batch_size": 32,
+        "size": [1],
+        "sight": 5,
+        "attributes": ["c", "v"]
+    }
+}
