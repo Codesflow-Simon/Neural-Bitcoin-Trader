@@ -45,14 +45,15 @@ to train your model first edit the `"train"` object in `config.json`
 - `"size"` (array of int), the number on nodes per hidden layer (excluding input layer, including final layer)
 - `"sight"` (int) the number of intervals in the future that the algorithm will try to predict the price
 - `"attributes"` (array of str) what data is used, can be:
-            -                              `"o"` for open (first trade of interval)
-            -                              `"h"` for high (most expensive trade of interval)
-            -                              `"l"` for low (cheapest trade of interval)
-            -                              `"c"` for close (most recent trade of interval)
-            -                              `"v"` for volume (sum asset value of trades in interval)
-            -                              `"qav"` for Quote asset volume (sum currency value of trade in interval)
-            -                              `"num_trades"` number of trades
-            -                              `"taker_base_vol"` taker buy base volume (volume when the buyer crossess the spread in currency)
+
+            - `"o"` for open (first trade of interval)
+            - `"h"` for high (most expensive trade of interval)
+            - `"l"` for low (cheapest trade of interval)
+            - `"c"` for close (most recent trade of interval)
+            - `"v"` for volume (sum asset value of trades in interval)
+            - `"qav"` for Quote asset volume (sum currency value of trade in interval)
+            - `"num_trades"` number of trades
+            - `"taker_base_vol"` taker buy base volume (volume when the buyer crossess the spread in currency)
             -                              `"taker_quote_vol"` take quote volume (volume when the buyer crossess the spread in assets)
 
 i.e.
@@ -88,4 +89,4 @@ apt packages (linux)
 
 Please submitt a pull requests to us.
 
-Simon Litte
+Simon Little
