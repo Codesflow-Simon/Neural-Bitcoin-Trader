@@ -17,7 +17,8 @@ i.e. "limit": 1000
 it is recomened to have sleep at 0 for fastest speeds (will be removed soon)
 
 i.e.
-"data": {
+"data": 
+     {
         "interval": "30m",
         "symbol": "BTCUSDT",
         "start": "2019-08-08 00:00",
@@ -44,8 +45,8 @@ Next your model need to be trained, edit the "train" object in config.json
 "size" (array of int), the number on nodes per hidden layer (excluding input layer, including final layer)
 "sight" (int) the number of intervals in the future that the algorithm will try to predict the price
 "attributes" (array of str) what data is used, can be:
-                                          "o" for open (first trade of interval)\n
-                                          "h" for high (most expensive trade of interval)\n
+                                          "o" for open (first trade of interval)
+                                          "h" for high (most expensive trade of interval)
                                           "l" for low (cheapest trade of interval)
                                           "c" for close (most recent trade of interval)
                                           "v" for volume (sum asset value of trades in interval)
