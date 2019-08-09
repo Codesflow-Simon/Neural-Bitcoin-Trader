@@ -1,6 +1,6 @@
 Neural Trader
 Neural trader is a machine learing model built in tensorflow and keras. It is used to predict future prices in cryptocurrency markets
-
+\n\n\n
 Getting Started
 To get started using Neural Trader, clone the repository onto your machine and run app.py in python 3.7.
 First you must create your database,
