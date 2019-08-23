@@ -48,7 +48,6 @@ def write(config):
             break
         
         print(time)
-
         # if_exists argument can take fail, replace or append strings
         if iterations == 0:
             response.DataFrame.to_sql('coin', conn, if_exists='replace')

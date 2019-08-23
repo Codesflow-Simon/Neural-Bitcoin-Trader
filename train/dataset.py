@@ -20,11 +20,15 @@ class environment:
         Min = min(x)
         Max = max(x)
         z = x
-        for i, _ in enumerate(x):
-            z[i] = (x[i]-Min)/(Max-Min)
-        return x
+        if Min==Max:
+            for i, _ in enumerate(x):
+                z[i] = 0.5
+        else:
+            for i, _ in enumerate(x):
+                z[i] = (x[i]-Min)/(Max-Min)
+        return z 
 
-    def __init__ (self):
+    def __init__ (self, length, max):
         # import database
         conn = self.create_connection('database/binance.db')
         c = conn.cursor()
@@ -35,6 +39,7 @@ class environment:
         df = pd.DataFrame(c.fetchall())
         df.columns = list(map(lambda x: x[0], c.description))
         del df['index'], df['open_time'], df['close_time'], df['ignore']
+        print(df.index)
 
         # Building x
         delays = [0, 1, 2]
@@ -57,6 +62,10 @@ class environment:
             self.x = np.array(x)
             self.diff = np.array(diff)
         # return np.array(x), np.array(diff)
+
+    def save(self):
+        self.x.save('env_np/x.npy')
+        self.diff.save('env_np/d.npy')
 
     def reset(self):
         self.index = 0

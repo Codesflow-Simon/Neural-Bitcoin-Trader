@@ -4,7 +4,7 @@
         "interval": "5m",
         "symbol": "BTCUSDT",
         "start": "2018-01-01 00:00",
-        "limit": 100,
-        "iterations": 1
+        "limit": 1000,
+        "iterations": 10
     }
 }

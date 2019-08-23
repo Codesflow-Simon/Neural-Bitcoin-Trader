@@ -3,7 +3,7 @@ import sys
 from getopt import getopt
 
 from database.sqlite_writer import write
-from train.dataset import x_get
+from train.dataset import environment
 from matplotlib import pyplot as plt
 
 def opt_to_dict(opt):
@@ -24,7 +24,7 @@ if 'w' in d:
     write(config)
 
 if 't' in d:
-    x = x_get(None)
+    env = environment(None)
 
 if 'p' in d:
     pass

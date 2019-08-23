@@ -1,4 +1,7 @@
 import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.layers import Dense
+from tensorflow.keras import backend as K
 import numpy as np
 from dataset import environment
 import sys
@@ -13,10 +16,10 @@ learning_rate = 0.01
 
 # Building DNN
 X = tf.placeholder(tf.float32, shape=[None, n_inputs], name='input')
-hidden = tf.layers.dense(X, n_hidden, activation=tf.nn.elu,
-                         kernel_initializer=initalister)
-logits = tf.layers.dense(hidden, n_output,
-                         kernel_initializer=initalister)
+hidden = Dense(n_hidden, activation='elu',
+               kernel_initializer=initalister)(X)
+logits = Dense(n_output,
+               kernel_initializer=initalister)(hidden)
 output = tf.nn.softmax(logits)
 action = tf.random.categorical(tf.math.log(output), num_samples=1)
 
@@ -26,13 +29,16 @@ cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(
     labels=y, logits=logits)
 optimizer = tf.train.AdamOptimizer(learning_rate)
 
-# Calculation and storage of gradients
+# Calculation of gradients (in game)
 grads_and_vars = optimizer.compute_gradients(cross_entropy)
 gradients = [grad for grad, variable in grads_and_vars]
+
+# Storage of gradients
 gradient_placeholders = []
 grads_and_vars_feed = []
 for grad, variable in grads_and_vars:
-    gradient_placeholder = tf.placeholder(tf.float32, shape=grad.shape, name='gradient')
+    gradient_placeholder = tf.placeholder(
+        tf.float32, shape=grad.shape, name='gradient')
     gradient_placeholders.append(gradient_placeholder)
     grads_and_vars_feed.append((gradient_placeholder, variable))
 
@@ -66,12 +72,15 @@ n_games_per_update = 10  # Train the policy every x episodes
 save_iterations = 10     # save the model every 10 iterations
 gamma = 0.93             # discount factor
 env = environment()
+print('save')
+env.save()
 
 with tf.Session() as sess:
+    K.set_session(sess)
     init.run()
     for iteration in range(n_iterations):
         all_rewards = []   # all sequences of raw rewards for each episode
-        all_gradients = [] # gradients saves at each step per episode
+        all_gradients = []  # gradients saves at each step per episode
 
         position = 0
         for game in range(n_games_per_update):
@@ -80,18 +89,21 @@ with tf.Session() as sess:
             obs, d = env.reset()
 
             for step in range(n_max_steps):
-                action_val, gradients_val, recomended_position = sess.run(
-                    [action, gradients, action[0]-1],
+                gradients_val, position_val = sess.run(
+                    [gradients, action[0]-1],
                     feed_dict={X: obs}
                 )
-                if recomended_position != position:
+                if position_val != position:
                     bias = -0.1
                 else:
                     bias = 0
-                position = recomended_position
+                position = position_val
                 obs, d = env.next_step()
-                reward = d * position + bias
-                current_rewards.append(d)
+                reward = d * position + (bias * abs(d * position))
+                if reward == 0:
+                    reward = bias * 50
+                print(d, position, bias, reward)
+                current_rewards.append(reward)
                 current_gradients.append(gradients_val)
 
             all_rewards.append(current_rewards)
@@ -100,16 +112,15 @@ with tf.Session() as sess:
 
         all_rewards = discount_and_normalise_rewards(all_rewards, gamma)
         feed_dict = {}
-        _b, _d = env.reset()
         for var_index, grad_placeholder in enumerate(gradient_placeholders):
             # Multiply the gradients by the action scores
             mean_gradients = np.mean(
                 [reward * all_gradients[game_index][step][var_index]
-                for game_index, rewards in enumerate(all_rewards)
-                for step, reward in enumerate(rewards)],
+                 for game_index, rewards in enumerate(all_rewards)
+                 for step, reward in enumerate(rewards)],
                 axis=0
             )
             feed_dict[grad_placeholder] = mean_gradients
         sess.run(training_op, feed_dict=feed_dict)
-        if iteration % save_iterations ==0:
+        if iteration % save_iterations == 0:
             saver.save(sess, './train/checkpoints/policy.ckpt')
