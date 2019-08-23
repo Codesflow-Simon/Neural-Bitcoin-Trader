@@ -1,6 +1,8 @@
-import binance_getter
 import sqlite3
 from sqlite3 import Error
+
+import binance_getter
+
 
 # Used to connect to the sql database
 # This is no the file itself but a connection to it allowing for easy R/W

@@ -41,8 +41,6 @@ class get_data:
                         'o', 'h', 'l', 'c', 'v',
                         'close_time', 'qav', 'num_trades',
                         'taker_base_vol', 'taker_quote_vol', 'ignore']
-            # Adding datetime index to DataFrame
-            df.index = [dt.datetime.fromtimestamp(x/1000.0) - dt.timedelta(hours=10) for x in df.close_time]
             # Converting strings to floats
             self.data = True
             return df.apply(pd.to_numeric, errors='coerce')

@@ -3,8 +3,8 @@ import sys
 from getopt import getopt
 
 from database.sqlite_writer import write
-from train.train import prep_data, train
-
+from train.dataset import x_get
+from matplotlib import pyplot as plt
 
 def opt_to_dict(opt):
     d = {}
@@ -13,25 +13,18 @@ def opt_to_dict(opt):
     return d
 
 
-opt = getopt(sys.argv[1:], 'tw', ['config='])[0]
+opt = getopt(sys.argv[1:], 'twp', ['config='])[0]
 d = opt_to_dict(opt)
 if 'w' in d:
     print('writing...')
-    
-    with open('config.json') as config_file:
+
+    with open(d['config']+'.json') as config_file:
         config = json.load(config_file)['data']
 
     write(config)
 
 if 't' in d:
-    # Hyperparamers and settings
-    with open('config.json') as config_file:
-        hyperparameters = json.load(config_file)['train']
+    x = x_get(None)
 
-    print('preping...')
-    # Getting data
-    x, y, df = prep_data(hyperparameters)
-
-    print('training...')
-    # Training algorithm
-    train(x, y, hyperparameters, df)
+if 'p' in d:
+    pass

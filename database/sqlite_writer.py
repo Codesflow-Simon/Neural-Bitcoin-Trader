@@ -56,7 +56,6 @@ def write(config):
             response.DataFrame.to_sql('coin', conn, if_exists='append')
         time = time + interval_td
         iterations += 1
-        t.sleep(config['sleep'])
 
     # Save (commit) the changes
     conn.commit()
